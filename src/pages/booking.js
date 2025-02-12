@@ -1,4 +1,4 @@
-function Home() {
+function Booking() {
     return (
         <div>
             <h1>Book an Appointment with Jay's Auto Repair</h1>
@@ -7,4 +7,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Booking;

@@ -1,7 +1,22 @@
 import { Link } from "react-router-dom";
 import "./navbar.css";
+import { useEffect, useState } from "react";
 
 function Navbar() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        // Check if token exists in localStorage
+        const token = localStorage.getItem("token");
+        setIsLoggedIn(!!token); // Converts token existence to true/false
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("token"); // Remove token
+        setIsLoggedIn(false); // Update state
+        window.location.href = "/"; // Redirect to home page
+    };
+    
     return (
         <nav className="navbar">
             <div className="logo-container">
@@ -13,8 +28,18 @@ function Navbar() {
                 <li><Link to="/about">About</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/booking">Schedule Appointment</Link></li>
-                <li><Link to="/auth">Sign In / Sign Up</Link></li>
-                <li className="logout-item"><button className="logout-button">Log Out</button></li> 
+
+                {/* Show Sign In / Sign Up only when user is NOT logged in */}
+                {!isLoggedIn && (
+                    <li><Link to="/auth">Sign In / Sign Up</Link></li>
+                )}
+
+                {/* Show Logout button only when user IS logged in */}
+                {isLoggedIn && (
+                    <li className="logout-item">
+                        <button className="logout-button" onClick={handleLogout}>Log Out</button>
+                    </li>
+                )}
             </ul>
         </nav>
     );

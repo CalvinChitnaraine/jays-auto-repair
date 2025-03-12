@@ -1,32 +1,72 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./auth.css";
 
-function Auth({ setIsLoggedIn }) {
+function Auth() {
     const [isRegistering, setIsRegistering] = useState(false);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const navigate = useNavigate(); // Used to navigate after login
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoggedIn(true); // Simulating login, replace with real authentication logic
+
+        const endpoint = isRegistering ? "users" : "login";
+        const payload = { email, password };
+
+        try {
+            const response = await fetch(`http://localhost:5000/${endpoint}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Authentication failed");
+            }
+
+            // Store JWT token & redirect
+            localStorage.setItem("token", data.token);
+            navigate("/"); // Redirect to homepage
+            window.location.reload(); // Ensure Navbar updates
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     return (
         <div className="auth-wrapper">
             <div className="auth-container">
                 <h3>{isRegistering ? "Create an Account" : "Welcome Back"}</h3>
+                {error && <p style={{ color: "red" }}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     {isRegistering && (
                         <div className="input-field">
-                            <input type="text" required />
-                            <label>Enter your name</label>
+                            <input type="text" placeholder="Enter your name" required />
                         </div>
                     )}
                     <div className="input-field">
-                        <input type="email" required />
-                        <label>Enter your email</label>
+                        <input
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
                     </div>
                     <div className="input-field">
-                        <input type="password" required />
-                        <label>Enter your password</label>
+                        <input
+                            type="password"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
                     </div>
                     <button type="submit">{isRegistering ? "Register" : "Login"}</button>
                     <p className="toggle-auth">

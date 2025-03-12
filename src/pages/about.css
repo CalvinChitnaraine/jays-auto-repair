@@ -1,0 +1,210 @@
+/* General Styling */
+.about-page {
+    width: 100%;
+}
+
+/* Who We Are Section */
+.who-we-are {
+    background-color: #f7f3f1; /* Light background */
+    width: 100%;
+    padding: 100px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+.who-we-are h2 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.who-we-are p {
+    font-size: 1.5rem;
+    line-height: 1.8;
+    text-align: left;
+}
+
+.who-we-are .content {
+    max-width: 60%;
+    margin-left: 45px;
+}
+
+.who-we-are img {
+    width: 30%;
+    height: auto;
+    border-radius: 10px;
+    max-width: 495px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin-left: 50px;
+}
+
+/* Meet the Owner Section */
+.meet-the-owner {
+    background-color: black;
+    color: white;
+    width: 100%;
+    padding: 100px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+}
+
+.meet-the-owner h2 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.meet-the-owner p {
+    font-size: 1.5rem;
+    text-align: left;
+    line-height: 1.8;
+}
+
+.meet-the-owner .content {
+    max-width: 60%;
+    margin-right: 90px;
+}
+
+.meet-the-owner img {
+    width: 30%;
+    height: auto;
+    border-radius: 10px;
+    max-width: 400px;
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+    margin-right: 50px;
+}
+
+/* Title Highlighting */
+.title-bold {
+    font-weight: 800;
+}
+
+.who-highlight {
+    color: black; /* Ensures "Who" remains black */
+}
+
+.owner-highlight {
+    color: rgb(255, 140, 111); /* Ensures "Owner" remains orange */
+}
+
+.title-highlight {
+    color: rgb(255, 140, 111);
+}
+
+/* Ensure responsiveness */
+@media screen and (max-width: 768px) {
+    .who-we-are,
+    .meet-the-owner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .who-we-are .content,
+    .meet-the-owner .content {
+        max-width: 100%;
+    }
+
+    .who-we-are img,
+    .meet-the-owner img {
+        width: 80%;
+        max-width: 300px;
+        margin: 20px auto;
+    }
+
+    .who-we-are h2,
+    .meet-the-owner h2 {
+        text-align: center;
+    }
+}
+
+
+/* Why Choose Us Section */
+.why-choose-section {
+    text-align: center;
+    padding: 60px 10%;
+    background-color: #f8f8f8;
+}
+
+/* Title Styling */
+.why-choose-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 65px;
+}
+
+/* Highlighted Text */
+.why-highlight {
+    color: rgb(255, 140, 111);
+}
+
+/* Flexbox for Icons & Text */
+.why-choose-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 40px;
+}
+
+/* Individual Feature */
+.why-choose-item {
+    text-align: center;
+    flex: 1;
+    font-size: 1.4rem; /* Increase font size */
+    font-weight: 700;
+    color: #222;
+    margin-top: 20px; /* Add more space */
+    margin-bottom: 5px;
+}
+
+/* Icons */
+.why-choose-icon {
+    background-color: #ddd;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px auto;
+    transition: background-color 0.3s ease-in-out, filter 0.3s ease-in-out;
+}
+
+/* Icon Images */
+.why-choose-icon img {
+    width: 50px;
+    height: 50px;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.why-choose-icon:hover {
+    background-color: rgb(255, 140, 111);
+}
+
+.why-choose-icon:hover img {
+    filter: grayscale(0%);
+}
+
+/* Titles for Features */
+.why-choose-item h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+/* Descriptions */
+.why-choose-item p {
+    font-size: 1.1rem;
+    color: #555;
+}

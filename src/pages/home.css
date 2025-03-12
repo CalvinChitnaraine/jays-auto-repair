@@ -1,0 +1,242 @@
+.home-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* ✅ Pushes left and right apart */
+    padding: 60px 10%;
+    text-align: left;
+}
+
+/* ✅ Adjust hero-content to center align the booking card */
+.hero-content {
+    flex: 1;
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ✅ Centers booking card */
+}
+
+/* ✅ Headline Styling */
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.hero-bold {
+    font-weight: 800;
+    color: black;
+}
+
+.hero-highlight {
+    color: rgb(255, 140, 111);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 10px;
+}
+
+/* ✅ Booking Card */
+.booking-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    display: flex; /* ✅ Ensures content inside is centered */
+    flex-direction: column; /* ✅ Stacks elements inside */
+    align-items: center; /* ✅ Centers content */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+    text-align: center;
+    width: 250px; /* ✅ Adjust width */
+}
+
+.booking-icon {
+    font-size: 2rem; 
+    color: rgb(255, 99, 60); 
+    margin-bottom: 10px;
+}
+
+.booking-button {
+    background-color: rgb(255, 99, 60); 
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.booking-button:hover {
+    background-color: rgb(255, 140, 111);
+}
+
+/* ✅ Right Side (Image) */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-image img {
+    width: 80%; /* ✅ Adjust based on your preference */
+    max-width: 500px; /* ✅ Prevents it from getting too large */
+    height: auto;
+    border-radius: 10px; /* ✅ Optional rounded corners */
+}
+
+.booking-button:hover {
+    background-color: #e06b00;
+}
+
+.services, .why-choose-us, .testimonials, .contact-info, .cta {
+    padding: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+@keyframes slide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+}
+  
+.banner {
+  margin-top: 0;
+  white-space: nowrap;
+  position: relative;
+  width: 100vw;
+  height: 300px;
+  background: black;
+  overflow: hidden;
+}
+
+.banner-slide {
+  display: inline-block;
+  animation: 30s slide infinite linear;
+}
+
+.banner-slide img {
+  height: 300px;
+  margin: 0 2px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.banner:hover .banner-slide {
+    animation-play-state: paused;
+}
+
+.banner-slide img:hover {
+    transform: scale(1.02);
+}
+
+
+/* Services Section */
+.services {
+    background-color: #d3d3d3; /* ✅ Grey background */
+    padding: 50px 0;
+    text-align: center;
+    width: 100vw; /* ✅ Makes the section take full page width */
+    margin: calc(-50vw + 50%); /* ✅ Ensures no gaps on the sides */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.services h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #333;
+}
+
+.services .highlight {
+    color: rgb(255, 140, 111); /* ✅ Orange "We Offer" text */
+}
+
+.divider {
+    width: 50%;
+    margin: 10px auto;
+    border: 1px solid #555;
+}
+
+/* Service Grid */
+.service-container {
+    width: 80%; /* ✅ Ensures content stays centered */
+    max-width: 1200px; /* ✅ Prevents content from being too wide on large screens */
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px; /* ✅ Adds spacing between cards */
+}
+
+/* Service Card */
+.service-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 240px; /* ✅ Adjust width to make uniform */
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* ✅ Ensures even spacing */
+    align-items: center;
+    height: 248px; /* ✅ Keeps the overall card size uniform */
+}
+
+.service-card img {
+    width: 100%;
+    height: 180px; /* ✅ Ensures images are the same size */
+    border-radius: 10px;
+    object-fit: cover; /* ✅ Prevents image stretching */
+}
+
+.service-card p {
+    font-size: 21px;
+    font-weight: bold;
+    color: #333;
+    flex-grow: 1; /* ✅ Ensures it takes up available space */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Reviews Section */
+
+.reviews-section h2 {
+    font-size: 3rem; /* Same size as the previous section */
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
+
+.reviews-section .highlight {
+    color: rgb(255, 140, 111); /* Match the orange color */
+}

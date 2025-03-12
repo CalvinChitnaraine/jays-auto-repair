@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.hero {
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  height: 100vh; /* ✅ Ensures full screen height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  font-size: 2rem;
+}

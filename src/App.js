@@ -7,6 +7,8 @@ import Contact from "./pages/contact";
 import Booking from "./pages/booking";
 import Auth from "./pages/auth";
 import Footer from "./components/footer";
+import Profile from "./pages/profile";
+import Admin from "./pages/admin";
 
 
 
@@ -22,6 +24,8 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/booking" element={<Booking />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/admin" element={<Admin />} />
             </Routes>
             <Footer />
         </Router>

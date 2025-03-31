@@ -3,6 +3,15 @@ import "./home.css";
 
 function Home() {
     const navigate = useNavigate();
+    const isLoggedIn = !!localStorage.getItem("token"); // Check if the user is logged in
+
+    const handleBookingClick = () => {
+        if (isLoggedIn) {
+            navigate("/booking"); // Go to booking page if logged in
+        } else {
+            navigate("/auth"); // Go to auth page if not logged in
+        }
+    };
 
     return (
         <div>
@@ -36,8 +45,8 @@ function Home() {
                     <div className="booking-card">
                         <div className="booking-icon">✔</div>
                         <h2>Book an Appointment</h2>
-                        <button className="booking-button" onClick={() => navigate("/auth")}>
-                            Schedule Appointment
+                        <button className="booking-button" onClick={handleBookingClick}>
+                                Schedule Appointment
                         </button>
                     </div>
                 </div>

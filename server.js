@@ -57,8 +57,8 @@ app.post("/users", async (req, res) => {
       console.log("Hashed Password:", hashedPassword);
   
       const newUser = await pool.query(
-        "INSERT INTO users (email, first_name, last_name, password, phone_number) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [email, first_name, last_name, hashedPassword, phone_number]
+        "INSERT INTO users (email, first_name, last_name, password, phone_number, profile_image) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+        [email, first_name, last_name, hashedPassword, phone_number, "profileimg1"] // default
       );
   
       res.json(newUser.rows[0]);
@@ -116,6 +116,42 @@ app.post("/login", async (req, res) => {
         console.error("Error during login:", err.message);
         res.status(500).send("Server error");
     }
+});
+
+app.put("/users/profile-image", verifyToken, async (req, res) => {
+  const userId = req.user.id;
+  const { profile_image } = req.body;
+
+  if (!profile_image) {
+      return res.status(400).json({ error: "No image selected" });
+  }
+
+  try {
+      const result = await pool.query(
+          "UPDATE users SET profile_image = $1 WHERE id = $2 RETURNING *",
+          [profile_image, userId]
+      );
+      res.json({ message: "Profile image updated", user: result.rows[0] });
+  } catch (err) {
+      console.error("Error updating profile image:", err.message);
+      res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.get("/users/me", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const result = await pool.query("SELECT id, first_name, last_name, email, phone_number, role, profile_image FROM users WHERE id = $1", [userId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Error fetching user info:", err.message);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 // Start Server

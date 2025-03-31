@@ -3,20 +3,31 @@ import "./navbar.css";
 import { useEffect, useState } from "react";
 
 function Navbar() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+    const [role, setRole] = useState(localStorage.getItem("role"));
 
     useEffect(() => {
-        // Check if token exists in localStorage
-        const token = localStorage.getItem("token");
-        setIsLoggedIn(!!token); // Converts token existence to true/false
+        const handleStorageChange = () => {
+            setIsLoggedIn(!!localStorage.getItem("token"));
+            setRole(localStorage.getItem("role"));
+        };
+
+        // Listen to changes across tabs or reloads
+        window.addEventListener("storage", handleStorageChange);
+
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+        };
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem("token"); // Remove token
-        setIsLoggedIn(false); // Update state
-        window.location.href = "/"; // Redirect to home page
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        setIsLoggedIn(false);
+        setRole(null);
+        window.location.href = "/";
     };
-    
+
     return (
         <nav className="navbar">
             <div className="logo-container">
@@ -27,14 +38,23 @@ function Navbar() {
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/about">About</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
-                <li><Link to="/booking">Schedule Appointment</Link></li>
 
-                {/* Show Sign In / Sign Up only when user is NOT logged in */}
+                {isLoggedIn && role === "user" && (
+                    <li><Link to="/booking">Schedule Appointment</Link></li>
+                )}
+
+                {isLoggedIn && (
+                    <li><Link to="/profile">Profile</Link></li>
+                )}
+
+                {isLoggedIn && role === "admin" && (
+                    <li><Link to="/admin">Admin Panel</Link></li>
+                )}
+
                 {!isLoggedIn && (
                     <li><Link to="/auth">Sign In / Sign Up</Link></li>
                 )}
 
-                {/* Show Logout button only when user IS logged in */}
                 {isLoggedIn && (
                     <li className="logout-item">
                         <button className="logout-button" onClick={handleLogout}>Log Out</button>

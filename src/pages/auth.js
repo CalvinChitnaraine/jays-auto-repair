@@ -4,36 +4,41 @@ import "./auth.css";
 
 function Auth() {
     const [isRegistering, setIsRegistering] = useState(false);
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [error, setError] = useState("");
-    const navigate = useNavigate(); // Used to navigate after login
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const endpoint = isRegistering ? "users" : "login";
-        const payload = { email, password };
+        const payload = isRegistering
+            ? { first_name: firstName, last_name: lastName, email, password, phone_number: phoneNumber }
+            : { email, password };
 
         try {
             const response = await fetch(`http://localhost:5000/${endpoint}`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload),
             });
 
             const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.error || "Authentication failed");
-            }
+            console.log("User data from backend:", data.user);
 
-            // Store JWT token & redirect
+            if (!response.ok) throw new Error(data.error || "Authentication failed");
+
             localStorage.setItem("token", data.token);
-            navigate("/"); // Redirect to homepage
-            window.location.reload(); // Ensure Navbar updates
+            localStorage.setItem("role", data.user.role); // Store role
+            localStorage.setItem("profile_image", data.user.profile_image);
+
+            navigate("/");
+            window.location.reload();
         } catch (err) {
             setError(err.message);
         }
@@ -46,9 +51,35 @@ function Auth() {
                 {error && <p style={{ color: "red" }}>{error}</p>}
                 <form onSubmit={handleSubmit}>
                     {isRegistering && (
-                        <div className="input-field">
-                            <input type="text" placeholder="Enter your name" required />
-                        </div>
+                        <>
+                            <div className="input-field">
+                                <input
+                                    type="text"
+                                    placeholder="First Name"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="input-field">
+                                <input
+                                    type="text"
+                                    placeholder="Last Name"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="input-field">
+                                <input
+                                    type="tel"
+                                    placeholder="Phone Number"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
+                                    required
+                                />
+                            </div>
+                        </>
                     )}
                     <div className="input-field">
                         <input

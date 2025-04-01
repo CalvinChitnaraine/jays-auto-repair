@@ -3,6 +3,7 @@ const cors = require("cors");
 const pool = require("./config/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 require("dotenv").config();
 
@@ -64,7 +65,7 @@ app.post("/users", async (req, res) => {
       res.json(newUser.rows[0]);
     } catch (err) {
       console.error("Database error:", err.message); // Log the actual error
-      res.status(500).json({ error: err.message }); // Send the error message to the client
+      res.status(500).json({ error: err.message }); // Send the error message to the user
     }
   }
 );
@@ -101,11 +102,11 @@ app.post("/login", async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.rows[0].password);
 
         if (!validPassword) {
-            console.log("Password comparison failed! ❌");
+            console.log("Password comparison failed!");
             return res.status(400).json({ error: "Invalid credentials" });
         }
 
-        console.log("Password matched successfully! ✅");
+        console.log("Password matched successfully!");
 
         // Generate JWT Token
         const token = jwt.sign({ id: user.rows[0].id }, process.env.JWT_SECRET, { expiresIn: "3h" });
@@ -135,6 +136,41 @@ app.put("/users/profile-image", verifyToken, async (req, res) => {
   } catch (err) {
       console.error("Error updating profile image:", err.message);
       res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/contact", async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  try {
+    // Configure transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "jaydoesautorepair@gmail.com", // business Email
+        pass: process.env.GMAIL_APP_PASSWORD // using .env to keep it safe
+      }
+    });
+
+    // Compose email
+    const mailOptions = {
+      from: email, // sender’s email (user input)
+      to: "jaydoesautorepair@gmail.com", // business inbox
+      subject: `New Contact Form Submission from ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    res.json({ message: "Message sent successfully!" });
+  } catch (err) {
+    console.error("Email send error:", err.message);
+    res.status(500).json({ error: "Failed to send message." });
   }
 });
 

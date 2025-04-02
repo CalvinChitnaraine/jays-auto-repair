@@ -39,6 +39,93 @@ app.get("/protected", verifyToken, (req, res) => {
     res.json({ message: "You have access to this protected route!", user: req.user });
 });
 
+// Get all bookings with user info (admin only)
+app.get("/admin/bookings", verifyToken, async (req, res) => {
+  try {
+    // Check if user is admin
+    const userResult = await pool.query("SELECT role FROM users WHERE id = $1", [req.user.id]);
+    if (userResult.rows[0].role !== "admin") {
+      return res.status(403).json({ error: "Access denied. Admins only." });
+    }
+
+    // Join bookings with user info
+    const result = await pool.query(
+      `SELECT b.id AS booking_id, u.first_name, u.last_name, u.email, b.service_description, b.appointment_date, b.appointment_time
+       FROM bookings b
+       JOIN users u ON b.user_id = u.id
+       ORDER BY b.appointment_date, b.appointment_time`
+    );
+
+    res.json({ bookings: result.rows });
+  } catch (err) {
+    console.error("Error fetching bookings:", err.message);
+    res.status(500).json({ error: "Server error. Could not fetch bookings." });
+  }
+});
+
+// Get all users (admin only)
+app.get("/admin/users", verifyToken, async (req, res) => {
+  try {
+    const userResult = await pool.query("SELECT role FROM users WHERE id = $1", [req.user.id]);
+    if (userResult.rows[0].role !== "admin") {
+      return res.status(403).json({ error: "Access denied. Admins only." });
+    }
+
+    // Exclude password
+    const result = await pool.query(
+      `SELECT id, first_name, last_name, email, phone_number, role FROM users ORDER BY last_name`
+    );
+
+    res.json({ users: result.rows });
+  } catch (err) {
+    console.error("Error fetching users:", err.message);
+    res.status(500).json({ error: "Server error. Could not fetch users." });
+  }
+});
+
+app.delete("/admin/users/:id", verifyToken, async (req, res) => {
+  const targetId = parseInt(req.params.id);
+  const requesterId = req.user.id;
+
+  try {
+    // Check if requester is admin
+    const requester = await pool.query("SELECT role FROM users WHERE id = $1", [requesterId]);
+    if (requester.rows[0].role !== "admin") {
+      return res.status(403).json({ error: "Access denied. Admins only." });
+    }
+
+    // Prevent admin from deleting themselves
+    if (targetId === requesterId) {
+      return res.status(400).json({ error: "You cannot delete your own account." });
+    }
+
+    // Delete user
+    await pool.query("DELETE FROM users WHERE id = $1", [targetId]);
+    res.json({ message: "User account deleted." });
+  } catch (err) {
+    console.error("Error deleting user:", err.message);
+    res.status(500).json({ error: "Server error. Could not delete user." });
+  }
+});
+
+app.delete("/admin/bookings/:id", verifyToken, async (req, res) => {
+  const requesterId = req.user.id;
+  const bookingId = parseInt(req.params.id);
+
+  try {
+    const userResult = await pool.query("SELECT role FROM users WHERE id = $1", [requesterId]);
+    if (userResult.rows[0].role !== "admin") {
+      return res.status(403).json({ error: "Access denied. Admins only." });
+    }
+
+    await pool.query("DELETE FROM bookings WHERE id = $1", [bookingId]);
+    res.json({ message: "Booking deleted." });
+  } catch (err) {
+    console.error("Error deleting booking:", err.message);
+    res.status(500).json({ error: "Server error. Could not delete booking." });
+  }
+});
+
 
 // Add User Route (Sign Up)
 app.post("/users", async (req, res) => {

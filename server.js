@@ -62,7 +62,9 @@ app.post("/users", async (req, res) => {
         [email, first_name, last_name, hashedPassword, phone_number, "profileimg1"] // default
       );
   
-      res.json(newUser.rows[0]);
+      const token = jwt.sign({ id: newUser.rows[0].id }, process.env.JWT_SECRET, { expiresIn: "3h" });
+
+      res.json({ token, user: newUser.rows[0] });
     } catch (err) {
       console.error("Database error:", err.message); // Log the actual error
       res.status(500).json({ error: err.message }); // Send the error message to the user
@@ -187,6 +189,119 @@ app.get("/users/me", verifyToken, async (req, res) => {
   } catch (err) {
     console.error("Error fetching user info:", err.message);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Booking route 
+app.post("/bookings", verifyToken, async (req, res) => {
+  const userId = req.user.id;
+  const { service_description, appointment_date, appointment_time } = req.body;
+
+  if (!service_description || !appointment_date) {
+    return res.status(400).json({ error: "Missing required fields." });
+  }
+
+  try {
+    // Get the user's email and name for confirmation
+    const userResult = await pool.query(
+      "SELECT first_name, email FROM users WHERE id = $1",
+      [userId]
+    );
+
+    const user = userResult.rows[0];
+
+    // Store the booking
+    const newBooking = await pool.query(
+      "INSERT INTO bookings (user_id, service_description, appointment_date, appointment_time) VALUES ($1, $2, $3, $4) RETURNING *",
+      [userId, service_description, appointment_date, appointment_time]
+    );
+
+    // ✉️ Send confirmation email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "jaydoesautorepair@gmail.com",
+        pass: process.env.GMAIL_APP_PASSWORD
+      }
+    });
+
+
+    // Sanity check before parsing the time
+    if (!appointment_time) {
+      console.error("Missing appointment_time when formatting fullDateTime.");
+      return res.status(400).json({ error: "Invalid or missing appointment time." });
+    }
+    
+    const [year, month, day] = appointment_date.split("-");
+    // Split time with fallback
+    const [hour, minute, second = "00"] = appointment_time.split(":");
+    
+    // Construct safe full Date
+    const fullDateTime = new Date(
+      Number(year),
+      Number(month) - 1,
+      Number(day),
+      Number(hour),
+      Number(minute),
+      Number(second)
+    );
+    
+    // Validate date
+    if (isNaN(fullDateTime.getTime())) {
+      console.error("Invalid date constructed:", fullDateTime);
+      return res.status(400).json({ error: "Invalid date format." });
+    }
+
+    const formattedDate = new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'America/Toronto'
+    }).format(fullDateTime);   
+
+    const mailOptions = {
+      from: "jaydoesautorepair@gmail.com",
+      to: user.email,
+      subject: "Appointment Confirmation - Jay's Auto Repair",
+      text: `Hello ${user.first_name},\n\nThank you for booking an appointment with Jay's Auto Repair.\n\nHere are your details:\n- Date: ${formattedDate}\n- Issue: ${service_description}\n\nIf you have any questions or want to reschedule, feel free to reply to this email and please don't hesitate call us.\n\nBest regards,\nJay's Auto Repair`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).json({
+      message: "Booking created successfully. Confirmation email sent.",
+      booking: newBooking.rows[0]
+    });
+  } catch (err) {
+    console.error("Error creating booking:", err.message);
+    res.status(500).json({ error: "Server error. Could not create booking." });
+  }
+});
+
+app.get("/bookings/times", async (req, res) => {
+  const { date } = req.query;
+
+  if (!date) {
+    return res.status(400).json({ error: "Missing date parameter." });
+  }
+
+  try {
+    // Fetch all appointment times for the given date
+    const result = await pool.query(
+      "SELECT appointment_time FROM bookings WHERE appointment_date = $1",
+      [date]
+    );
+
+    const bookedTimes = result.rows.map((row) => row.appointment_time);
+
+    res.json({ bookedTimes });
+  } catch (err) {
+    console.error("Error fetching booked times:", err.message);
+    res.status(500).json({ error: "Server error. Could not fetch booked times." });
   }
 });
 

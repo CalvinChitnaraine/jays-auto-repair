@@ -1,0 +1,163 @@
+.booking-container {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+    background-color: #f7f3f1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.booking-title {
+  font-size: 2rem;
+  margin-bottom: 5rem;
+  text-align: center;
+}
+
+.booking-title .highlight {
+  color: rgb(255, 140, 111);
+}
+
+.booking-layout {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 1100px;
+  
+}
+
+.booking-layout {
+  align-items: flex-start; /* Prevent flex items from stretching to match each other's height */
+}
+
+.calendar-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: fit-content; /* prevent it from stretching */
+}
+
+.custom-calendar {
+    transform: scale(1.1); /* adjust for size */
+    max-height: 100%;       /* don't grow with container */
+}
+
+.separator {
+  width: 2px;
+  background-color: #ccc;
+  margin: 0 1rem;
+  align-self: stretch; /* Stretch to match tallest sibling */
+}
+
+.form-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1.5rem;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem; /* Adds space between Name and Email lines */
+}
+
+.description-area {
+  padding: 0.8rem;
+  font-size: 1rem;
+  resize: vertical;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.description-area:disabled {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #b00020;
+  font-weight: bold;
+}
+
+.submit-btn {
+  align-self: flex-start;
+  padding: 0.6rem 1.2rem;
+  background-color: rgb(255, 140, 111);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: rgb(230, 120, 95);
+}
+
+.success-message {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.business-hours-box {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 0.95rem;
+  text-align: center;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  width: 240px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* Vertically center */
+  height: 130px;            /* Fixed height to keep it consistent */
+}
+
+.business-hours-box h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0 0 0.4rem 0;
+}
+
+.business-hours-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.business-hours-box li {
+  margin-bottom: 0.25rem;
+  margin: 0.2rem 0;
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.business-hours-box {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: #fff;
+  font-size: 0.95rem;
+  text-align: center;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  width: 240px;
+}

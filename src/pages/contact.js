@@ -99,7 +99,8 @@ function Contact() {
         <div className="contact-info">
           <h4>Contacts</h4>
           <p className="contact-email">jaydoesautorepair@gmail.com</p>
-          <p className="contact-phone">(705) 123-4567</p>
+          <p className="contact-phonework">Work: (416)-412-7460</p>
+          <p className="contact-phonepersonal">Personal: (416)-402-0901</p>
 
           <h4 className="hours-heading">Business Hours</h4>
             <p className="business-hours">
